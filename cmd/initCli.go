@@ -37,7 +37,6 @@ var initCliCmd = &cobra.Command{
 		defer cron.Stop()
 
 		// go ConsumeEnergyMessage(ctx, mqttConn, &wg)
-		log.Println("Cli iniciado, aguardando mensagens via MQTT...")
 
 		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
@@ -49,5 +48,5 @@ var initCliCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(initCliCmd)
+	rootCmd.AddCommand(initCliCmd)
 }

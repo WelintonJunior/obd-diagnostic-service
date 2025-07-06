@@ -60,6 +60,6 @@ var migrateCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(migrateCmd)
+	rootCmd.AddCommand(migrateCmd)
 	migrateCmd.Flags().StringVarP(&option, "operation", "o", "", "Migration operation: up or down")
 }

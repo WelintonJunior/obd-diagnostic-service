@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	RootCmd = &cobra.Command{
+	rootCmd = &cobra.Command{
 		Use:   "github.com/WelintonJunior/my-sentiment",
 		Short: "A generator for Cobra based Applications",
 		Long: `Cobra is a CLI library for Go that empowers applications.
@@ -17,12 +17,12 @@ to quickly create a Cobra application.`,
 )
 
 func Execute() {
-	err := RootCmd.Execute()
+	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
 func init() {
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help Message for toggle")
+	rootCmd.Flags().BoolP("toggle", "t", false, "Help Message for toggle")
 }
