@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package diagnostics;
+
+option go_package = "github.com/WelintonJunior/obd-diagnostic-service/proto;diagnostics";
+
+service PrismaDiagnostics {
+  rpc Ping(Empty) returns (PingResponse);
+}
+
+message Empty {}
+
+message PingResponse {
+  string message = 1;
+}
