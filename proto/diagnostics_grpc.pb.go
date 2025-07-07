@@ -19,101 +19,101 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PrismaDiagnostics_Ping_FullMethodName = "/diagnostics.PrismaDiagnostics/Ping"
+	Diagnostics_Ping_FullMethodName = "/diagnostics.Diagnostics/Ping"
 )
 
-// PrismaDiagnosticsClient is the client API for PrismaDiagnostics service.
+// DiagnosticsClient is the client API for Diagnostics service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PrismaDiagnosticsClient interface {
+type DiagnosticsClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PingResponse, error)
 }
 
-type prismaDiagnosticsClient struct {
+type diagnosticsClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPrismaDiagnosticsClient(cc grpc.ClientConnInterface) PrismaDiagnosticsClient {
-	return &prismaDiagnosticsClient{cc}
+func NewDiagnosticsClient(cc grpc.ClientConnInterface) DiagnosticsClient {
+	return &diagnosticsClient{cc}
 }
 
-func (c *prismaDiagnosticsClient) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PingResponse, error) {
+func (c *diagnosticsClient) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PingResponse)
-	err := c.cc.Invoke(ctx, PrismaDiagnostics_Ping_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Diagnostics_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PrismaDiagnosticsServer is the server API for PrismaDiagnostics service.
-// All implementations must embed UnimplementedPrismaDiagnosticsServer
+// DiagnosticsServer is the server API for Diagnostics service.
+// All implementations must embed UnimplementedDiagnosticsServer
 // for forward compatibility.
-type PrismaDiagnosticsServer interface {
+type DiagnosticsServer interface {
 	Ping(context.Context, *Empty) (*PingResponse, error)
-	mustEmbedUnimplementedPrismaDiagnosticsServer()
+	mustEmbedUnimplementedDiagnosticsServer()
 }
 
-// UnimplementedPrismaDiagnosticsServer must be embedded to have
+// UnimplementedDiagnosticsServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPrismaDiagnosticsServer struct{}
+type UnimplementedDiagnosticsServer struct{}
 
-func (UnimplementedPrismaDiagnosticsServer) Ping(context.Context, *Empty) (*PingResponse, error) {
+func (UnimplementedDiagnosticsServer) Ping(context.Context, *Empty) (*PingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedPrismaDiagnosticsServer) mustEmbedUnimplementedPrismaDiagnosticsServer() {}
-func (UnimplementedPrismaDiagnosticsServer) testEmbeddedByValue()                           {}
+func (UnimplementedDiagnosticsServer) mustEmbedUnimplementedDiagnosticsServer() {}
+func (UnimplementedDiagnosticsServer) testEmbeddedByValue()                     {}
 
-// UnsafePrismaDiagnosticsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PrismaDiagnosticsServer will
+// UnsafeDiagnosticsServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DiagnosticsServer will
 // result in compilation errors.
-type UnsafePrismaDiagnosticsServer interface {
-	mustEmbedUnimplementedPrismaDiagnosticsServer()
+type UnsafeDiagnosticsServer interface {
+	mustEmbedUnimplementedDiagnosticsServer()
 }
 
-func RegisterPrismaDiagnosticsServer(s grpc.ServiceRegistrar, srv PrismaDiagnosticsServer) {
-	// If the following call pancis, it indicates UnimplementedPrismaDiagnosticsServer was
+func RegisterDiagnosticsServer(s grpc.ServiceRegistrar, srv DiagnosticsServer) {
+	// If the following call pancis, it indicates UnimplementedDiagnosticsServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&PrismaDiagnostics_ServiceDesc, srv)
+	s.RegisterService(&Diagnostics_ServiceDesc, srv)
 }
 
-func _PrismaDiagnostics_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Diagnostics_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PrismaDiagnosticsServer).Ping(ctx, in)
+		return srv.(DiagnosticsServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PrismaDiagnostics_Ping_FullMethodName,
+		FullMethod: Diagnostics_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PrismaDiagnosticsServer).Ping(ctx, req.(*Empty))
+		return srv.(DiagnosticsServer).Ping(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// PrismaDiagnostics_ServiceDesc is the grpc.ServiceDesc for PrismaDiagnostics service.
+// Diagnostics_ServiceDesc is the grpc.ServiceDesc for Diagnostics service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PrismaDiagnostics_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "diagnostics.PrismaDiagnostics",
-	HandlerType: (*PrismaDiagnosticsServer)(nil),
+var Diagnostics_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "diagnostics.Diagnostics",
+	HandlerType: (*DiagnosticsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Ping",
-			Handler:    _PrismaDiagnostics_Ping_Handler,
+			Handler:    _Diagnostics_Ping_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

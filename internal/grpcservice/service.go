@@ -7,7 +7,7 @@ import (
 )
 
 type DiagnosticService struct {
-	pb.UnimplementedPrismaDiagnosticsServer
+	pb.UnimplementedDiagnosticsServer
 }
 
 func (s *DiagnosticService) Ping(ctx context.Context, in *pb.Empty) (*pb.PingResponse, error) {

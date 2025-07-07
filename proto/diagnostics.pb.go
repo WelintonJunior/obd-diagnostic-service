@@ -108,8 +108,8 @@ const file_proto_diagnostics_proto_rawDesc = "" +
 	"\x17proto/diagnostics.proto\x12\vdiagnostics\"\a\n" +
 	"\x05Empty\"(\n" +
 	"\fPingResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2J\n" +
-	"\x11PrismaDiagnostics\x125\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2D\n" +
+	"\vDiagnostics\x125\n" +
 	"\x04Ping\x12\x12.diagnostics.Empty\x1a\x19.diagnostics.PingResponseBDZBgithub.com/WelintonJunior/obd-diagnostic-service/proto;diagnosticsb\x06proto3"
 
 var (
@@ -130,8 +130,8 @@ var file_proto_diagnostics_proto_goTypes = []any{
 	(*PingResponse)(nil), // 1: diagnostics.PingResponse
 }
 var file_proto_diagnostics_proto_depIdxs = []int32{
-	0, // 0: diagnostics.PrismaDiagnostics.Ping:input_type -> diagnostics.Empty
-	1, // 1: diagnostics.PrismaDiagnostics.Ping:output_type -> diagnostics.PingResponse
+	0, // 0: diagnostics.Diagnostics.Ping:input_type -> diagnostics.Empty
+	1, // 1: diagnostics.Diagnostics.Ping:output_type -> diagnostics.PingResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

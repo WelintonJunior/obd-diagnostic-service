@@ -17,11 +17,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-var apiPort int
+var grpcPort int
 
-var initApiServerCmd = &cobra.Command{
-	Use:   "initApiServer",
-	Short: "Inicializa o serviço web de API",
+var initGrpcServerCmd = &cobra.Command{
+	Use:   "initGrpcServer",
+	Short: "Inicializa o serviço web de Grpc",
 	Long:  "Comando para realizar a execução da aplicação",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := utils.LoadEnvMem()
@@ -29,14 +29,14 @@ var initApiServerCmd = &cobra.Command{
 			log.Fatal("No .env file found")
 		}
 
-		portStr := os.Getenv("API_PORT")
-		apiPort, err := strconv.Atoi(portStr)
+		portStr := os.Getenv("GRPC_PORT")
+		grpcPort, err := strconv.Atoi(portStr)
 		if err != nil {
-			log.Fatalf("Variavel de ambiente API_PORT inválido: %v", err)
+			log.Fatalf("Variavel de ambiente GRPC_PORT inválido: %v", err)
 		}
 
 		go func() {
-			StartGrpcServer(apiPort)
+			StartGrpcServer(grpcPort)
 		}()
 
 		cancelChan := make(chan os.Signal, 1)
@@ -48,8 +48,8 @@ var initApiServerCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(initApiServerCmd)
-	initApiServerCmd.Flags().IntVarP(&apiPort, "port", "p", apiPort, "Http server execution port")
+	rootCmd.AddCommand(initGrpcServerCmd)
+	initGrpcServerCmd.Flags().IntVarP(&grpcPort, "port", "p", grpcPort, "Http server execution port")
 }
 
 func StartGrpcServer(port int) {
@@ -59,7 +59,7 @@ func StartGrpcServer(port int) {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterPrismaDiagnosticsServer(s, &grpcservice.DiagnosticService{})
+	pb.RegisterDiagnosticsServer(s, &grpcservice.DiagnosticService{})
 
 	log.Printf("gRPC server iniciado na porta %d", port)
 	if err := s.Serve(lis); err != nil {
