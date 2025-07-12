@@ -6,7 +6,7 @@ type OBDReading struct {
 	Base
 
 	Timestamp time.Time `gorm:"not null" json:"timestamp"`
-	SessionID string    `gorm:"index" json:"session_id"` // relação com sessão
+	SessionID string    `gorm:"index" json:"session_id"`
 
 	RPM                 int     `json:"rpm"`
 	SpeedKPH            int     `json:"speed_kph"`

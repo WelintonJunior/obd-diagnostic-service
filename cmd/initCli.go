@@ -10,12 +10,10 @@ import (
 	"syscall"
 	"time"
 
+	obd "github.com/WelintonJunior/obd-diagnostic-service/infraestructure/bluetooth"
 	infraestructure "github.com/WelintonJunior/obd-diagnostic-service/infraestructure/postgres"
-	pb "github.com/WelintonJunior/obd-diagnostic-service/proto"
 	"github.com/WelintonJunior/obd-diagnostic-service/utils"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -62,7 +60,7 @@ type menuModel struct {
 }
 
 func initialModel() menuModel {
-	devices := scanBluetoothDevices()
+	devices := obd.ScanBluetoothDevices()
 	return menuModel{
 		options: []string{
 			"Iniciar leitura OBD2",
@@ -121,13 +119,6 @@ func (m menuModel) View() string {
 	return s
 }
 
-func scanBluetoothDevices() []string {
-	var devices []string
-	// você pode usar infraestructure.initBluetooth() e preencher essa lista
-	devices = append(devices, "OBDII-1234", "OBDII-5678")
-	return devices
-}
-
 func SetupCli(ctx context.Context, wg *sync.WaitGroup) {
 	p := tea.NewProgram(initialModel())
 	model, err := p.Run()
@@ -141,7 +132,7 @@ func SetupCli(ctx context.Context, wg *sync.WaitGroup) {
 
 	switch m.selected {
 	case "Iniciar leitura OBD2":
-		runGrpcPing(ctx)
+		startOBDReadingSession()
 	case "Ver códigos DTC":
 		log.Println("Funcionalidade de códigos DTC ainda não implementada.")
 	case "Sair":
@@ -149,23 +140,43 @@ func SetupCli(ctx context.Context, wg *sync.WaitGroup) {
 	}
 }
 
-func runGrpcPing(ctx context.Context) {
-	conn, err := grpc.NewClient(os.Getenv("GRPC_HOST")+os.Getenv("GRPC_PORT"), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Erro ao conectar: %v", err)
-	}
-	defer conn.Close()
+// func runGrpcPing(ctx context.Context) {
+// 	conn, err := grpc.NewClient(os.Getenv("GRPC_HOST")+os.Getenv("GRPC_PORT"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	if err != nil {
+// 		log.Fatalf("Erro ao conectar: %v", err)
+// 	}
+// 	defer conn.Close()
 
-	client := pb.NewDiagnosticsClient(conn)
+// 	client := pb.NewDiagnosticsClient(conn)
 
-	resp, err := client.Ping(ctx, &pb.Empty{})
-	if err != nil {
-		log.Fatalf("Erro no Ping: %v", err)
-	}
+// 	resp, err := client.Ping(ctx, &pb.Empty{})
+// 	if err != nil {
+// 		log.Fatalf("Erro no Ping: %v", err)
+// 	}
 
-	log.Printf("Resposta do servidor: %s", resp.GetMessage())
-}
+// 	log.Printf("Resposta do servidor: %s", resp.GetMessage())
+// }
 
 func init() {
 	rootCmd.AddCommand(initCliCmd)
+}
+
+func startOBDReadingSession() {
+	fmt.Println("Iniciando leitura OBD2...\n")
+
+	// obd.InitELM327("/dev/rfcomm0") // ou "COM3" no Windows
+	obd.InitELM327("COM3") // ou "COM3" no Windows
+
+	rpm := utils.ParseRPM(obd.ReadAndParse("010C"))
+	speed := utils.ParseSpeedKPH(obd.ReadAndParse("010D"))
+	temp := utils.ParseCoolantTemp(obd.ReadAndParse("0105"))
+	throttle := utils.ParseThrottlePosition(obd.ReadAndParse("0104"))
+	voltage := utils.ParseBatteryVoltage("")
+
+	fmt.Println("🔧 Leituras OBD2:")
+	fmt.Printf("➡️  RPM: %d rpm\n", rpm)
+	fmt.Printf("➡️  Velocidade: %d km/h\n", speed)
+	fmt.Printf("➡️  Temp. Arrefecimento: %.1f °C\n", temp)
+	fmt.Printf("➡️  Posição Acelerador: %.1f%%\n", throttle)
+	fmt.Printf("➡️  Voltagem Bateria: %.1f V\n", voltage)
 }
